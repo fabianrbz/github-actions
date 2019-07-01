@@ -1,0 +1,22 @@
+{
+  "name": "github-action-submodule-auto-pr",
+  "version": "1.0.0",
+  "description": "",
+  "main": "create-pr.js",
+  "scripts": {
+    "lint": "eslint .",
+    "lint-fix": "eslint --fix ."
+  },
+  "author": "Michael Heap <m@michaelheap.com>",
+  "license": "MIT",
+  "dependencies": {
+    "actions-toolkit": "^2.1.0",
+    "node-fetch": "^2.3.0"
+  },
+  "devDependencies": {
+    "eslint": "^5.10.0",
+    "eslint-config-prettier": "^3.3.0",
+    "eslint-plugin-prettier": "^3.0.0",
+    "prettier": "^1.15.3"
+  }
+}
