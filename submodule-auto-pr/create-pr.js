@@ -30,8 +30,8 @@ const fetch = require("node-fetch");
   // Make sure that this is a push to the target branch (usually master)
   tools.log.info(`Running on ${tools.context.ref}`);
   if (tools.context.ref != `refs/heads/${requiredActiveBranch}`) {
-    tools.exit.failure(
-      `Expected refs/heads/${requiredActiveBranch}, got ${tools.context.ref}`
+    tools.exit.neutral(
+      `Expected refs/heads/${requiredActiveBranch}, got ${tools.context.ref}. Stopping execution`
     );
   }
 
