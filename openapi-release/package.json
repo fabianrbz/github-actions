@@ -1,0 +1,12 @@
+{
+  "name": "release-openapi-on-push",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./index.js"
+  },
+  "dependencies": {
+    "actions-toolkit": "^2.1.0",
+    "semver": "^6.2.0"
+  }
+}
