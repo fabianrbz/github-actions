@@ -83,24 +83,28 @@ function addChangelogEntry(category, title, content) {
         console.log("Stripping double line breaks");
         content = content.replace(/\r\n/g, "\n");
 
-        console.log("Filling title");
-        await page.type('#editor-body [name="changelog[title]"]', title);
-        console.log("Filling body");
-        await page.type('#editor-body [name="changelog[markdown]"]', content);
-        console.log("Filling category");
-        await page.select('#editor-body [name="changelog[category_id]"]', category.toString());
+        try {
+            console.log("Filling title");
+            await page.type('#editor-body [name="changelog[title]"]', title);
+            console.log("Filling body");
+            await page.type('#editor-body [name="changelog[markdown]"]', content);
+            console.log("Filling category");
+            await page.select('#editor-body [name="changelog[category_id]"]', category.toString());
 
-        if (process.env.HEADWAY_AUTO_PUBLISH) {
-            console.log("Setting published flag to true");
-            await page.evaluate(() => document.querySelector('#editor-body [name="changelog[published]"]').setAttribute('value', 1));
+            if (process.env.HEADWAY_AUTO_PUBLISH) {
+                console.log("Setting published flag to true");
+                await page.evaluate(() => document.querySelector('#editor-body [name="changelog[published]"]').setAttribute('value', 1));
+            }
+
+            console.log("Saving");
+            await page.waitForSelector('.save a');
+            await page.click('.save a');
+
+            console.log("Closing Browser");
+            await browser.close();
+        } catch (e) {
+            tools.exit.failure("Unable to add changelog");
         }
-
-        console.log("Saving");
-        await page.waitForSelector('.save a');
-        await page.click('.save a');
-
-        console.log("Closing Browser");
-        await browser.close();
 
         return resolve();
     });
