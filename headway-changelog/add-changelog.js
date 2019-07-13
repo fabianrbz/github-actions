@@ -74,11 +74,12 @@ function addChangelogEntry(category, title, content) {
         await page.type('#user_password', process.env.HEADWAY_PASSWORD);
         await page.click('.buttonCont > input[type="submit"]');
         console.log("Waiting for new post layout");
-        await page.waitForSelector('.newPost');
+        await page.waitForSelector('#create');
+        await delay(1000);
 
         // Add a new post
         console.log("Adding new post");
-        await page.click('.newPost > .actionButton');
+        await page.click('#create');
 
         console.log("Stripping double line breaks");
         content = content.replace(/\r\n/g, "\n");
@@ -98,14 +99,21 @@ function addChangelogEntry(category, title, content) {
 
             console.log("Saving");
             await page.waitForSelector('.save a');
+            await delay(1000);
+            console.log("Clicking");
             await page.click('.save a');
 
             console.log("Closing Browser");
             await browser.close();
         } catch (e) {
+            console.log(e);
             tools.exit.failure("Unable to add changelog");
         }
 
         return resolve();
     });
+}
+
+function delay(d) {
+    return new Promise((r) => setTimeout(r, d));
 }
