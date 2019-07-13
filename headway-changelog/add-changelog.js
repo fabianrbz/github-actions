@@ -27,10 +27,11 @@ const categories = {
   const release = tools.context.payload.release;
   const repoName = tools.context.payload.repository.name;
 
-  // Use the explicit title if it's set, or default to the repo name
-  // if it's not
-  let title = process.env.HEADWAY_RELEASE_TITLE || repoName; 
-  title = title + ' ' + release.name;
+  // Use the title from the release, plus anything set in the environment
+  let title = release.name;
+  if (process.env.HEADWAY_RELEASE_TITLE) {
+    title = process.env.HEADWAY_RELEASE_TITLE + ' ' + title;
+  }
 
   // Then the content
   let content = release.body;
