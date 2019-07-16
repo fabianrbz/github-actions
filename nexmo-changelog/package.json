@@ -1,0 +1,16 @@
+{
+  "name": "nexmo-changelog",
+  "version": "1.0.0",
+  "description": "",
+  "main": "add-changelog.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "actions-toolkit": "^2.0.0",
+    "node-fetch": "^2.6.0"
+  }
+}
