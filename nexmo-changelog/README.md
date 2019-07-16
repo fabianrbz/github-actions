@@ -1,4 +1,4 @@
-# Headway Changelog
+# Nexmo Changelog
 
 This action is triggered whenever a new release is created on Github and copies the text from the Release notes to our public changelog. This enables changelogs to be shared from both public and private repos in a single place.
 
@@ -54,15 +54,15 @@ workflow "New release" {
 }
 
 action "Add Changelog" {
-  uses = "nexmo/github-actions/headway-changelog@master"
-  secrets = ["HEADWAY_USERNAME", "HEADWAY_PASSWORD"]
+  uses = "nexmo/github-actions/nexmo-changelog@master"
+  secrets = ["CHANGELOG_AUTH_TOKEN"]
   env = {
-    HEADWAY_CATEGORY = "YOUR_CATEGORY (see below)"
+    NEXMO_CATEGORY = "YOUR_CATEGORY (See below)"
   }
 }
 ```
 
-Make sure to set a category and to set any additional environment variables (see below) if required e.g. `DISABLE_REPO_LINK`
+Make sure to set a category and to set any additional environment variables (see below) if required e.g. `CHANGELOG_DISABLE_REPO_LINK`
 
 ## Configuration
 
@@ -70,18 +70,11 @@ To use this action you must configure the username/password as secrets, and *may
 
 ### Secrets
 
-* `HEADWAY_USERNAME` - The username to log in with
-* `HEADWAY_PASSWORD` - The password to log in with
+* `CHANGELOG_AUTH_TOKEN` - The auth token to use, speak to @mheap if you need this
 
 ### ENV variables
 
-* `HEADWAY_RELEASE_TITLE` - Specify the title to be used for changelog entries (Defaults to the repository name)
-* `HEADWAY_DISABLE_REPO_LINK` - By default a link to the release on Github is added to the changelog content. Set to `true` to disable this functionality (Defaults to `false`)
-* `HEADWAY_CATEGORY` - Choose the category to use. Must be one of: `Client SDK`, `Server SDK`, `API`, `General`. (Defaults to `General`)
-* `HEADWAY_AUTO_PUBLISH` - If enabled, the post will automatically be published. If not it wil be added as a draft ready for review. (Defaults to `false`)
-
-## Troubleshooting
-
-This action uses Puppeteer to log in and add an entry using headless Chrome. This is a temporary workaround until the API is ready. If you encounter issues, speak to @mheap
-
-
+* `CHANGELOG_RELEASE_TITLE` - Specify the title to be used for changelog entries (Defaults to the repository name)
+* `CHANGELOG_DISABLE_REPO_LINK` - By default a link to the release on Github is added to the changelog content. Set to `true` to disable this functionality (Defaults to `false`)
+* `CHANGELOG_CATEGORY` - Choose the category to use. Must be one of: `Client SDK`, `Server SDK`, `API`, `General`. (Defaults to `General`)
+* `CHANGELOG_SUBCATEGORY` - An additional field that can be used for tagging. This will usually be the language for SDKs, or the product for API updates
