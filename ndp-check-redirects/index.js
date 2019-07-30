@@ -37,7 +37,13 @@ Toolkit.run(async tools => {
   tools.log.pending('Looking for renamed and removed files');
   let changedFiles = [];
   for (let file of changes.data.files) {
+
     if (file.status == 'renamed') {
+      if (file.previous_filename.substr(0, 14) != '_documentation') {
+        tools.log.warn(`Ignorning renamed file not in _documentation folder: ${file.previous_filename}`);
+        continue;
+      }
+
       changedFiles.push({
         from: pathToUrl(file.previous_filename),
         to: pathToUrl(file.filename)
@@ -45,6 +51,11 @@ Toolkit.run(async tools => {
     }
 
     if (file.status == 'removed') {
+      if (file.filename.substr(0, 14) != '_documentation') {
+        tools.log.warn(`Ignorning deleted file not in _documentation folder: ${file.filename}`);
+        continue;
+      }
+
       changedFiles.push({
         from: pathToUrl(file.filename),
         to: 'MISSING'
