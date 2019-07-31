@@ -15,7 +15,7 @@ Toolkit.run(async tools => {
   // Make sure that we're operating on a pull_request and that it's either a opened or synchronize event. If not, neutral exit
   let expectedActions = ['opened', 'synchronize'];
   if (expectedActions.indexOf(action) === -1) {
-    tools.exit.failure(`Expected one of: ${expectedActions.join(', ')} - got '${action}'`);
+    tools.exit.neutral(`Expected one of: ${expectedActions.join(', ')} - got '${action}'`);
   }
 
   // if payload.body contains #no-redirect-check
