@@ -2,6 +2,10 @@ const { Toolkit } = require('actions-toolkit')
 const yaml = require('yaml');
 const fs = require('fs');
 
+const nonDocumentationPattern = new RegExp([
+  ".*\/use-cases[\/|\.md].*" // Slash if there's something after, or .md if it's a file
+].join('|'));
+
 // Run your GitHub Action!
 Toolkit.run(async tools => {
 
@@ -85,8 +89,20 @@ Toolkit.run(async tools => {
   for (let f in foundRedirects) {
     let path = `${tools.workspace}/_documentation${foundRedirects[f]}.md`
 
+    let missing = true;
+
+    // If the file exists on disk the redirect is valid
+    if (fs.existsSync(path)) {
+      missing = false;
+    }
+
+    // Or if it matches one of our pre-approved routes
+    if (path.match(nonDocumentationPattern)) {
+      missing = false;
+    }
+
     // If not, add an error
-    if (!fs.existsSync(path)) {
+    if (missing) {
         errors.push(`Specified redirect could not be found: ${path}`)
     }
   }
