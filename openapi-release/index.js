@@ -44,6 +44,8 @@ const semver = require('semver');
     tools.log.debug(`Latest tag commit hash: ${before}`);
 
     tools.log.debug(`Generating diff since that commit`);
+    tools.log.debug(`From: ${before}`);
+    tools.log.debug(`To: ${commit_sha}`);
     const commit = await tools.github.repos.compareCommits({
         owner,
         repo,
@@ -61,10 +63,12 @@ const semver = require('semver');
 
     commit.data.split("\n").forEach((line) => {
         // Pull out the header
-        if (line.substr(0, 6) == '--- a/') {
+        // We have to use +++ b/ as if files are created, a/ doesn't exist
+        if (line.substr(0, 6) == '+++ b/') {
             currentFile = line.substr(6);
             versionChanges[currentFile] = {};
         }
+
         if (line.substr(0, 11) == '-  version:') {
             versionChanges[currentFile].from = line.substr(11).trim();
         }
@@ -72,13 +76,16 @@ const semver = require('semver');
             versionChanges[currentFile].to = line.substr(11).trim();
         }
     });
+
     tools.log.debug(`Version changes extracted`);
 
     // Filter down to just .yml files
     versionChanges = Object.keys(versionChanges)
         .filter(key => key.match(/\.yml$/))
         .reduce((obj, key) => {
-            obj[key] = versionChanges[key];
+            if (Object.keys(versionChanges[key]).length){
+                obj[key] = versionChanges[key];
+            }
             return obj;
         }, {});
 
@@ -153,6 +160,7 @@ const semver = require('semver');
     let releaseNotes = prBody;
 
     tools.log.info('Tag: ' + tagName);
+    tools.log.info('Commit: ' + commit_sha);
     tools.log.info('Release Title: ' + releaseTitle);
     tools.log.info('Release Notes: ' + releaseNotes);
 
