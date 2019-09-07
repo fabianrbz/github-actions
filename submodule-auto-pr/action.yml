@@ -1,0 +1,9 @@
+name: 'Submodule Auto PR'
+description: 'Raise a pull request against Nexmo Developer to update submodules on commit to master'
+author: 'Michael Heap'
+branding:
+  icon: 'chevrons-up'
+  color: 'orange'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'

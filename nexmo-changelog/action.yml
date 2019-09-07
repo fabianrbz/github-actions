@@ -1,0 +1,9 @@
+name: 'Nexmo Changelog'
+description: 'Add a changlog entry to https://changelog.nexmo.com on release'
+author: 'Michael Heap'
+branding:
+  icon: 'edit'
+  color: 'orange'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'

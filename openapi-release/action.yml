@@ -1,0 +1,9 @@
+name: 'Create OpenAPI Release'
+description: 'Detect changes in OpenAPI files and automatically tag a release'
+author: 'Michael Heap'
+branding:
+  icon: 'search'
+  color: 'orange'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
