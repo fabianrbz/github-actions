@@ -1,0 +1,9 @@
+name: 'NDP Missing Redirects'
+description: 'Check for missing redirects on NDP'
+author: 'Michael Heap'
+branding:
+  icon: 'check-circle'
+  color: 'orange'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
