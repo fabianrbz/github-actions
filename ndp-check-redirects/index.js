@@ -69,7 +69,10 @@ Toolkit.run(async tools => {
 
   if (changedFiles.length) {
     tools.log.pending('Loading redirects files');
-    const redirects = yaml.parse(tools.getFile('config/redirects.yml'));
+    let redirects = yaml.parse(tools.getFile('config/redirects.yml'));
+    let stitchRedirects = yaml.parse(tools.getFile('config/stitch-redirects.yml'));
+    Object.assign(redirects, stitchRedirects);
+
     tools.log.complete('Loading redirects files');
 
     // Check if each rename/removal has an entry. If not, push in to array
