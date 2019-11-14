@@ -3,7 +3,7 @@ const yaml = require('yaml');
 const fs = require('fs');
 
 const nonDocumentationPattern = new RegExp([
-  ".*\/use-cases[\/|\.md].*" // Slash if there's something after, or .md if it's a file
+  ".*\/(use-cases|tutorials)[\/|\.md].*" // Slash if there's something after, or .md if it's a file
 ].join('|'));
 
 // Run your GitHub Action!
