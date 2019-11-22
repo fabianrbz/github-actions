@@ -1,0 +1,19 @@
+{
+  "action": "opened",
+  "number": 1,
+  "pull_request": {
+    "base": {
+      "sha": "f95f852bd8fca8fcc58a9a2d6c842781e32a215e"
+    },
+    "head": {
+      "sha": "ec26c3e57ca3a959ca5aad62de7213c562f8c821"
+    }
+  },
+  "repository": {
+    "name": "nexmo-developer",
+    "owner": {
+      "name": "nexmo",
+      "login": "nexmo"
+    }
+  }
+}
