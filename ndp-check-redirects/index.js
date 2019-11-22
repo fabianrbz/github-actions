@@ -41,7 +41,6 @@ Toolkit.run(async tools => {
   tools.log.pending('Looking for renamed and removed files');
   let changedFiles = [];
   for (let file of changes.data.files) {
-
     if (file.status == 'renamed') {
       if (file.previous_filename.substr(0, 14) != '_documentation') {
         tools.log.warn(`Ignorning renamed file not in _documentation folder: ${file.previous_filename}`);
@@ -68,52 +67,56 @@ Toolkit.run(async tools => {
   }
   tools.log.complete('Looking for renamed and removed files');
 
-  tools.log.pending('Loading redirects files');
-  const redirects = yaml.parse(tools.getFile('config/redirects.yml'));
-  tools.log.complete('Loading redirects files');
+  if (changedFiles.length) {
+    tools.log.pending('Loading redirects files');
+    const redirects = yaml.parse(tools.getFile('config/redirects.yml'));
+    tools.log.complete('Loading redirects files');
 
-  // Check if each rename/removal has an entry. If not, push in to array
-  tools.log.pending('Checking if redirects exist');
-  const errors = [];
-  const foundRedirects = {};
-  for (let change of changedFiles) {
-    if (!redirects[change.from]) {
-      errors.push(`"${change.from}": "${change.to}"`);
-    } else {
-      foundRedirects[change.from] = redirects[change.from];
+    // Check if each rename/removal has an entry. If not, push in to array
+    tools.log.pending('Checking if redirects exist');
+    const errors = [];
+    const foundRedirects = {};
+    for (let change of changedFiles) {
+      if (!redirects[change.from]) {
+        errors.push(`"${change.from}": "${change.to}"`);
+      } else {
+        foundRedirects[change.from] = redirects[change.from];
+      }
     }
-  }
-  tools.log.complete('Checking if redirects exist');
+    tools.log.complete('Checking if redirects exist');
 
-  // If there is a redirect, make sure that the new destination exists
-  for (let f in foundRedirects) {
-    let path = `${tools.workspace}/_documentation${foundRedirects[f]}.md`
+    // If there is a redirect, make sure that the new destination exists
+    for (let f in foundRedirects) {
+      let path = `${tools.workspace}/_documentation${foundRedirects[f]}.md`
 
-    let missing = true;
+      let missing = true;
 
-    // If the file exists on disk the redirect is valid
-    if (fs.existsSync(path)) {
-      missing = false;
-    }
+      // If the file exists on disk the redirect is valid
+      if (fs.existsSync(path)) {
+        missing = false;
+      }
 
-    // Or if it matches one of our pre-approved routes
-    if (path.match(nonDocumentationPattern)) {
-      missing = false;
-    }
+      // Or if it matches one of our pre-approved routes
+      if (path.match(nonDocumentationPattern)) {
+        missing = false;
+      }
 
-    // If not, add an error
-    if (missing) {
+      // If not, add an error
+      if (missing) {
         errors.push(`Specified redirect could not be found: ${path}`)
+      }
     }
-  }
 
-  // If we have any entries without a redirect, fail the build
-  if (errors.length) {
-    tools.exit.failure(`Missing redirects: \n\n${errors.join("\n")}`)
+    // If we have any entries without a redirect, fail the build
+    if (errors.length) {
+      tools.exit.failure(`Missing redirects: \n\n${errors.join("\n")}`)
+    } else {
+      tools.exit.success('No missing redirects');
+    }
+  } else {
+    // Otherwise it's successful
+    tools.exit.success('No missing redirects');
   }
-
-  // Otherwise it's successful
-  tools.exit.success('No missing redirects')
 }, { event: 'pull_request' })
 
 function pathToUrl(path) {

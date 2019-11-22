@@ -3,10 +3,13 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "start": "node ./index.js"
+    "start": "node ./index.js",
+    "test": "jest"
   },
   "dependencies": {
     "actions-toolkit": "^2.1.0",
+    "jest": "^24.9.0",
+    "nock": "^11.7.0",
     "yaml": "^1.6.0"
   }
 }
