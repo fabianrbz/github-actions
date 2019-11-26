@@ -28,8 +28,9 @@ const tools = new Toolkit();
     let content = release.body;
 
     // Sometimes we don't want to link to the release (e.g. if it's a private repo)
+    let github_link = '';
     if (!process.env.CHANGELOG_DISABLE_REPO_LINK) {
-        content += "\n\n[" + release.html_url + "]("+release.html_url+")";
+        github_link = release.html_url;
     }
 
     let category = (process.env.CHANGELOG_CATEGORY || 'General');
@@ -40,16 +41,17 @@ const tools = new Toolkit();
         category += ' - Beta';
     }
 
-    await addChangelogEntry(category, subcategory, title, content);
+    await addChangelogEntry(category, subcategory, title, content, github_link);
 })();
 
-function addChangelogEntry(category, subcategory, title, content) {
+function addChangelogEntry(category, subcategory, title, content, github_link) {
     return new Promise(async (resolve) => {
         let body = {
             title,
             content,
             category,
             subcategory,
+            github_link,
         };
 
         let resp = await fetch(`https://nexmo-changelog.herokuapp.com/api/entry`, {
