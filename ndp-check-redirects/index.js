@@ -123,5 +123,5 @@ Toolkit.run(async tools => {
 }, { event: 'pull_request' })
 
 function pathToUrl(path) {
-    return path.substr(14).slice(0, -3);
+    return path.substr(17).slice(0, -3);
 }

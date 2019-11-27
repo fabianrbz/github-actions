@@ -44,8 +44,8 @@ describe("Check Redirects Action", () => {
     let changes = {
       "files": [
         {
-          "filename": "_documentation/file1.md",
-          "previous_filename": "_documentation/file1_old.md",
+          "filename": "_documentation/cn/file1.md",
+          "previous_filename": "_documentation/cn/file1_old.md",
           "status": "renamed",
         },
         {
@@ -54,7 +54,12 @@ describe("Check Redirects Action", () => {
           "status": "renamed",
         },
         {
-          "filename": "_documentation/file2.md",
+          "filename": "_documentation/en/client-sdk/file3.md",
+          "previous_filename": "_documentation/en/client-sdk/file3_old.md",
+          "status": "renamed",
+        },
+        {
+          "filename": "_documentation/en/file2.md",
           "status": "removed",
         },
         {
@@ -81,14 +86,22 @@ describe("Check Redirects Action", () => {
           /file1_old: /file1
           /file2: /file1
           `
+        ).mockReturnValueOnce(
+          `---
+          /client-sdk/file3_old: /client-sdk/file3
+          `
         );
-        fs.existsSync = jest.fn().mockReturnValueOnce(true).mockReturnValueOnce(true);
+        fs.existsSync = jest.fn()
+          .mockReturnValueOnce(true)
+          .mockReturnValueOnce(true)
+          .mockReturnValueOnce(true);
 
         await action(tools);
 
         expect(tools.log.warn).toHaveBeenCalledWith("Ignorning renamed file not in _documentation folder: ignored_old.md");
         expect(tools.log.warn).toHaveBeenCalledWith("Ignorning deleted file not in _documentation folder: removed.md");
         expect(tools.getFile).toHaveBeenCalledWith("config/redirects.yml");
+        expect(tools.getFile).toHaveBeenCalledWith("config/stitch-redirects.yml");
         expect(tools.exit.success).toHaveBeenCalledWith("No missing redirects");
       });
 
@@ -97,6 +110,10 @@ describe("Check Redirects Action", () => {
           `---
           /file1_old: /tutorials/file1
           /file2: /tutorials/file2
+          `
+        ).mockReturnValueOnce(
+          `---
+          /client-sdk/file3_old: /tutorials/file3
           `
         );
 
@@ -112,6 +129,10 @@ describe("Check Redirects Action", () => {
           /file1_old: /use-cases/file1
           /file2: /use-cases/file2
           `
+        ).mockReturnValueOnce(
+          `---
+          /client-sdk/file3_old: /use-cases/file3
+          `
         );
 
         await action(tools);
@@ -126,6 +147,10 @@ describe("Check Redirects Action", () => {
           /file1_old: /file1-invalid
           /file2: /file2-invalid
           `
+        ).mockReturnValueOnce(
+          `---
+          /client-sdk/file3_old: /client-sdk/file3-invalid
+          `
         );
 
         await action(tools);
@@ -135,6 +160,7 @@ describe("Check Redirects Action", () => {
           `Missing redirects: 
 
 Specified redirect could not be found: /tmp/_documentation/file1-invalid.md
+Specified redirect could not be found: /tmp/_documentation/client-sdk/file3-invalid.md
 Specified redirect could not be found: /tmp/_documentation/file2-invalid.md`
       );
       });
@@ -142,7 +168,7 @@ Specified redirect could not be found: /tmp/_documentation/file2-invalid.md`
 
     describe("With missing redirects", () => {
       it("exits with a failure code", async () => {
-        tools.getFile.mockReturnValueOnce("---{}");
+        tools.getFile.mockReturnValueOnce("---{}").mockReturnValueOnce('');
 
         await action(tools);
 
@@ -151,6 +177,7 @@ Specified redirect could not be found: /tmp/_documentation/file2-invalid.md`
           `Missing redirects: 
 
 "/file1_old": "/file1"
+"/client-sdk/file3_old": "/client-sdk/file3"
 "/file2": "MISSING"`
         );
       });
